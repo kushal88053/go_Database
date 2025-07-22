@@ -1,18 +1,120 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	"net/http"
 )
 
+type Address struct {
+	City    string
+	State   string
+	Country string
+	Pincode json.Number
+}
+
+type User struct {
+	Name    string 
+	Age     json.Number
+	Contact string
+	Company string
+	Address Address
+}
+
 func main() {
-	fmt.Println("Starting the application..")
+	fmt.Println("Hello, World!")
+	dir := "/"
 
-	app := http.NewServeMux()
-	app.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello, World!")
+	db, err := New(dir, nil)
+
+	if err != nil {
+		fmt.Println("Error creating database:", err)
+		return
+	}
+
+	employee := []User{
+		{
+			Name:    "kushal",
+			Age:     "22",
+			Contact: "1234567890",
+			Company: "Vishnu Tech",
+			Address: Address{
+				City: "Indore ",
+
+				State:   "MP",
+				Country: "India",
+				Pincode: "452001",
+			},
+		},
+		{
+			Name:    "kushal",
+			Age:     "22",
+			Contact: "1234567890",
+			Company: "TechCorp Tech",
+			Address: Address{
+				City: "Indore ",
+
+				State:   "MP",
+				Country: "India",
+				Pincode: "452001",
+			},
+		},
+		{
+			Name:    "Shubham",
+			Age:     "22",
+			Contact: "1234567890",
+			Company: "Bajali Tech",
+			Address: Address{
+				City: "Indore ",
+
+				State:   "MP",
+				Country: "India",
+				Pincode: "452001",
+			},
+		},
+		{
+			Name:    "Ayush",
+			Age:     "22",
+			Contact: "1234567890",
+			Company: "Go explore",
+			Address: Address{
+				City: "Indore ",
+
+				State:   "MP",
+				Country: "India",
+				Pincode: "452001",
+			},
+		},
+		{
+			Name:    "Vishal",
+			Age:     "22",
+			Contact: "1234567890",
+			Company: "USE expore",
+			Address: Address{
+				City: "Indore ",
+				State:   "MP",
+				Country: "India",
+				Pincode: "452001",
+			},
+		},
+	}
+
+	for _ , temp = range employee {
+		err = db.Write("users",value.Name , User
+	{
+		Name : temp.Name,
+		Age:  temp.Age,
+		Contact: temp.Contact,
+		Company: temp.Company,
+		Address: temp.Address
 	})
-	http.ListenAndServe(":8080", app)
-	fmt.Println("Application started on port 8080")
+}
 
+   record,err :=db.ReadAll("users")
+
+   if err != nil {
+	fmt.Println("Error reading records:", err)
+
+   }
+
+   fmt.Println("Records in users collection:" , record)
 }
