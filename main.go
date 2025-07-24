@@ -157,7 +157,41 @@ if collection == "" {
 	return nil
 }
 
-func (d *Driver)ReadAll()(){
+func (d *Driver)ReadAll(collection string)([]string , error) {
+
+	if collection == "" {
+		return nil, fmt.Errorf("collection name cannot be empty")
+	}
+
+	mutex := d.getOrCreateMutex(d.mutexes, collection)
+	mutex.Lock()
+	defer mutex.Unlock()
+
+	dir := filepath.Join(d.dir, collection)
+
+	if _, err := os.Stat(dir); err !=nil {
+		return nil, fmt.Errorf("collection %s does not exist", collection)
+	}
+
+	files, err := os.ReadDir(dir)
+    
+	if err != nil {
+		return nil, fmt.Errorf("failed to read directory %s: %w", dir, err)
+	}
+
+	var records []string
+
+	for _, file := range files {
+		if !file.IsDir() && filepath.Ext(file.Name()) == ".json" {
+			data, err := os.ReadFile(filepath.Join(dir, file.Name()))
+			if err != nil {
+				return nil, fmt.Errorf("failed to read file %s: %w", file.Name(), err)
+			}
+			records = append(records, string(data))
+		}
+	}
+
+	return records, nil
 
 }
 
